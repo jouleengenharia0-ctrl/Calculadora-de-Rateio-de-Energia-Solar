@@ -1,0 +1,1 @@
+# Calculadora-de-Rateio-de-Energia-Solar
