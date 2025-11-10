@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Rateio de Energia Solar</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        h2 {
+            color: #3498db;
+            margin: 25px 0 15px 0;
+            font-size: 1.4rem;
+        }
+        
+        .section {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            display: block;
+            margin: 20px auto;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .result {
+            background-color: #e8f4fc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 4px solid #2ecc71;
+        }
+        
+        .result h3 {
+            color: #27ae60;
+            margin-bottom: 15px;
+        }
+        
+        .beneficiary {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .error {
+            color: #e74c3c;
+            font-weight: 600;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #fde8e6;
+            border-radius: 4px;
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .success {
+            color: #27ae60;
+            font-weight: 600;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #e8f6ef;
+            border-radius: 4px;
+            border-left: 4px solid #27ae60;
+        }
+        
+        .beneficiary-list {
+            margin-top: 20px;
+        }
+        
+        .beneficiary-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        
+        .beneficiary-item input {
+            flex: 1;
+            margin-right: 10px;
+        }
+        
+        .remove-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        
+        .remove-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .calculation-steps {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .calculation-steps h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .step {
+            margin-bottom: 10px;
+        }
+        
+        .percentage-bar {
+            height: 20px;
+            background-color: #ecf0f1;
+            border-radius: 10px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .percentage-fill {
+            height: 100%;
+            background-color: #3498db;
+            border-radius: 10px;
+            transition: width 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calculadora de Rateio de Energia Solar</h1>
+        
+        <!-- Seção 1: Cálculo da Geração do Sistema -->
+        <div class="section">
+            <h2>1. Cálculo da Geração do Sistema</h2>
+            <div class="form-group">
+                <label for="moduleQuantity">Quantidade de Módulos:</label>
+                <input type="number" id="moduleQuantity" min="1" value="10">
+            </div>
+            <div class="form-group">
+                <label for="modulePower">Potência dos Módulos (WP):</label>
+                <input type="number" id="modulePower" min="1" value="550">
+            </div>
+            <div class="form-group">
+                <label for="constant">Constante (kWh/kWp):</label>
+                <input type="number" id="constant" min="1" value="130">
+            </div>
+            <button id="calculateGeneration">Calcular Geração</button>
+            <div id="generationResult" class="result" style="display: none;">
+                <h3>Resultado da Geração</h3>
+                <div id="generationCalculation"></div>
+            </div>
+        </div>
+        
+        <!-- Seção 2: Consumidores -->
+        <div class="section">
+            <h2>2. Consumidores</h2>
+            
+            <div class="form-group">
+                <label for="generatorConsumption">Consumo da UC Geradora (kWh):</label>
+                <input type="number" id="generatorConsumption" min="0" value="50">
+            </div>
+            
+            <h3>UCs Beneficiárias</h3>
+            <div id="beneficiariesList" class="beneficiary-list">
+                <div class="beneficiary-item">
+                    <input type="text" class="beneficiary-name" placeholder="Nome da UC" value="Beneficiária 01">
+                    <input type="number" class="beneficiary-consumption" min="0" placeholder="Consumo (kWh)" value="150">
+                    <button class="remove-btn">Remover</button>
+                </div>
+                <div class="beneficiary-item">
+                    <input type="text" class="beneficiary-name" placeholder="Nome da UC" value="Beneficiária 02">
+                    <input type="number" class="beneficiary-consumption" min="0" placeholder="Consumo (kWh)" value="200">
+                    <button class="remove-btn">Remover</button>
+                </div>
+                <div class="beneficiary-item">
+                    <input type="text" class="beneficiary-name" placeholder="Nome da UC" value="Beneficiária 03">
+                    <input type="number" class="beneficiary-consumption" min="0" placeholder="Consumo (kWh)" value="300">
+                    <button class="remove-btn">Remover</button>
+                </div>
+            </div>
+            
+            <button id="addBeneficiary">Adicionar Beneficiária</button>
+            <button id="calculateDistribution">Calcular Rateio</button>
+            
+            <div id="consumptionValidation" style="display: none;"></div>
+        </div>
+        
+        <!-- Seção 3: Resultados do Rateio -->
+        <div id="distributionResult" class="result" style="display: none;">
+            <h3>Resultado do Rateio</h3>
+            <div id="distributionCalculation"></div>
+            <div id="beneficiariesDistribution"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos DOM
+            const moduleQuantityInput = document.getElementById('moduleQuantity');
+            const modulePowerInput = document.getElementById('modulePower');
+            const constantInput = document.getElementById('constant');
+            const calculateGenerationBtn = document.getElementById('calculateGeneration');
+            const generationResultDiv = document.getElementById('generationResult');
+            const generationCalculationDiv = document.getElementById('generationCalculation');
+            
+            const generatorConsumptionInput = document.getElementById('generatorConsumption');
+            const beneficiariesListDiv = document.getElementById('beneficiariesList');
+            const addBeneficiaryBtn = document.getElementById('addBeneficiary');
+            const calculateDistributionBtn = document.getElementById('calculateDistribution');
+            const consumptionValidationDiv = document.getElementById('consumptionValidation');
+            const distributionResultDiv = document.getElementById('distributionResult');
+            const distributionCalculationDiv = document.getElementById('distributionCalculation');
+            const beneficiariesDistributionDiv = document.getElementById('beneficiariesDistribution');
+            
+            // Variáveis globais
+            let systemGeneration = 0;
+            
+            // Calcular geração do sistema
+            calculateGenerationBtn.addEventListener('click', function() {
+                const moduleQuantity = parseInt(moduleQuantityInput.value);
+                const modulePower = parseInt(modulePowerInput.value);
+                const constant = parseInt(constantInput.value);
+                
+                if (isNaN(moduleQuantity) || isNaN(modulePower) || isNaN(constant)) {
+                    alert('Por favor, preencha todos os campos com valores válidos.');
+                    return;
+                }
+                
+                // Cálculo da geração
+                const totalPower = moduleQuantity * modulePower; // em WP
+                systemGeneration = (totalPower / 1000) * constant; // em kWh
+                
+                // Mostrar resultado
+                generationCalculationDiv.innerHTML = `
+                    <div class="calculation-steps">
+                        <h4>Passo a passo do cálculo:</h4>
+                        <div class="step">Quantidade de módulos × Potência dos módulos = ${moduleQuantity} × ${modulePower}WP = ${totalPower}WP</div>
+                        <div class="step">(Total de potência ÷ 1000) × Constante = (${totalPower} ÷ 1000) × ${constant} = ${systemGeneration.toFixed(2)}kWh</div>
+                    </div>
+                    <div class="success">Geração do sistema: <strong>${systemGeneration.toFixed(2)} kWh</strong></div>
+                `;
+                
+                generationResultDiv.style.display = 'block';
+            });
+            
+            // Adicionar beneficiária
+            addBeneficiaryBtn.addEventListener('click', function() {
+                const beneficiaryItem = document.createElement('div');
+                beneficiaryItem.className = 'beneficiary-item';
+                beneficiaryItem.innerHTML = `
+                    <input type="text" class="beneficiary-name" placeholder="Nome da UC">
+                    <input type="number" class="beneficiary-consumption" min="0" placeholder="Consumo (kWh)">
+                    <button class="remove-btn">Remover</button>
+                `;
+                
+                beneficiariesListDiv.appendChild(beneficiaryItem);
+                
+                // Adicionar evento de remoção
+                const removeBtn = beneficiaryItem.querySelector('.remove-btn');
+                removeBtn.addEventListener('click', function() {
+                    beneficiariesListDiv.removeChild(beneficiaryItem);
+                });
+            });
+            
+            // Adicionar eventos de remoção para beneficiárias iniciais
+            document.querySelectorAll('.remove-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const beneficiaryItem = this.parentElement;
+                    beneficiariesListDiv.removeChild(beneficiaryItem);
+                });
+            });
+            
+            // Calcular rateio
+            calculateDistributionBtn.addEventListener('click', function() {
+                // Verificar se a geração foi calculada
+                if (systemGeneration === 0) {
+                    alert('Por favor, calcule primeiro a geração do sistema.');
+                    return;
+                }
+                
+                // Obter consumo da geradora
+                const generatorConsumption = parseFloat(generatorConsumptionInput.value);
+                
+                // Obter consumos das beneficiárias
+                const beneficiaries = [];
+                let totalBeneficiaryConsumption = 0;
+                
+                document.querySelectorAll('.beneficiary-item').forEach(item => {
+                    const name = item.querySelector('.beneficiary-name').value || 'Beneficiária';
+                    const consumption = parseFloat(item.querySelector('.beneficiary-consumption').value);
+                    
+                    if (!isNaN(consumption) && consumption > 0) {
+                        beneficiaries.push({ name, consumption });
+                        totalBeneficiaryConsumption += consumption;
+                    }
+                });
+                
+                // Verificar se há beneficiárias
+                if (beneficiaries.length === 0) {
+                    consumptionValidationDiv.innerHTML = '<div class="error">Adicione pelo menos uma UC beneficiária.</div>';
+                    consumptionValidationDiv.style.display = 'block';
+                    return;
+                }
+                
+                // Verificar se o consumo total é menor que a geração
+                const totalConsumption = generatorConsumption + totalBeneficiaryConsumption;
+                
+                if (totalConsumption > systemGeneration) {
+                    consumptionValidationDiv.innerHTML = `
+                        <div class="error">
+                            O consumo total (${totalConsumption.toFixed(2)} kWh) é maior que a geração do sistema (${systemGeneration.toFixed(2)} kWh). 
+                            Verifique com o parceiro.
+                        </div>
+                    `;
+                    consumptionValidationDiv.style.display = 'block';
+                    distributionResultDiv.style.display = 'none';
+                    return;
+                } else {
+                    consumptionValidationDiv.innerHTML = `
+                        <div class="success">
+                            O consumo total (${totalConsumption.toFixed(2)} kWh) é menor que a geração do sistema (${systemGeneration.toFixed(2)} kWh). 
+                            Rateio pode ser calculado.
+                        </div>
+                    `;
+                    consumptionValidationDiv.style.display = 'block';
+                }
+                
+                // Calcular rateio
+                const availableEnergy = systemGeneration - generatorConsumption;
+                
+                // Calcular porcentagens
+                beneficiaries.forEach(beneficiary => {
+                    beneficiary.percentage = (beneficiary.consumption / totalBeneficiaryConsumption) * 100;
+                    beneficiary.allocatedEnergy = (beneficiary.percentage / 100) * availableEnergy;
+                });
+                
+                // Mostrar resultados
+                distributionCalculationDiv.innerHTML = `
+                    <div class="calculation-steps">
+                        <h4>Passo a passo do rateio:</h4>
+                        <div class="step">Geração do sistema: ${systemGeneration.toFixed(2)} kWh</div>
+                        <div class="step">(-) Consumo da geradora: ${generatorConsumption.toFixed(2)} kWh</div>
+                        <div class="step">(=) Energia disponível para rateio: ${availableEnergy.toFixed(2)} kWh</div>
+                        <div class="step">Consumo total das beneficiárias: ${totalBeneficiaryConsumption.toFixed(2)} kWh</div>
+                    </div>
+                `;
+                
+                // Mostrar distribuição por beneficiária
+                let beneficiariesHTML = '<h4>Distribuição por Beneficiária:</h4>';
+                
+                // Geradora
+                beneficiariesHTML += `
+                    <div class="beneficiary">
+                        <div>UC Geradora</div>
+                        <div>${generatorConsumption.toFixed(2)} kWh (100% do consumo)</div>
+                        <div>0% do rateio</div>
+                    </div>
+                    <div class="percentage-bar">
+                        <div class="percentage-fill" style="width: 100%"></div>
+                    </div>
+                `;
+                
+                // Beneficiárias
+                beneficiaries.forEach(beneficiary => {
+                    beneficiariesHTML += `
+                        <div class="beneficiary">
+                            <div>${beneficiary.name}</div>
+                            <div>${beneficiary.consumption.toFixed(2)} kWh</div>
+                            <div>${beneficiary.percentage.toFixed(2)}%</div>
+                        </div>
+                        <div class="percentage-bar">
+                            <div class="percentage-fill" style="width: ${beneficiary.percentage}%"></div>
+                        </div>
+                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">
+                            Energia alocada: ${beneficiary.allocatedEnergy.toFixed(2)} kWh
+                        </div>
+                    `;
+                });
+                
+                beneficiariesDistributionDiv.innerHTML = beneficiariesHTML;
+                distributionResultDiv.style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>
